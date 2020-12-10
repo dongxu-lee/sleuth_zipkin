@@ -8,8 +8,19 @@ eureka:
   instance:
     prefer-ip-address: true
 
+logging:
+  level:
+    org.springframework.web.servlet.DispatcherServlet: debug
+    org.springframework.cloud.sleuth: debug
 
 
 spring:
   application:
     name: provider
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    sender:
+      type: web #客户端将数据通过网络请求的方式传送到服务端，除web还有kafka、rabbit
+  sleuth:
+    sampler:
+      probability: 1 #采样率 1代表100%全采集，默认0.1，表示采集10%

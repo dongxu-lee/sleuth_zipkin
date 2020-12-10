@@ -1,16 +1,29 @@
 server:
-  port: 9001
+  port: 8080
 
 eureka:
-  instance:
-    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:@project.version@
 
 spring:
   application:
-    name: consumer
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: consumer9001
+          uri: lb://consumer
+          predicates:
+            - Path=/**
+        - id: oauthserver
+            uri: lb://oauth-server
+            predicates:
+              - Path=/**
+
   zipkin:
     base-url: http://127.0.0.1:9411
     sender:
